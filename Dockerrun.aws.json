@@ -1,0 +1,50 @@
+{
+  "AWSEBDockerrunVersion": 2,
+  "containerDefinitions": [
+    {
+      "name": "ratingsdata",
+      "image": "agilerules/movie-rating-service:0.0.1-SNAPSHOT",
+     
+      "essential": true,
+      "memory": 256,
+      "portMappings": [
+        {
+          "hostPort": 8083,
+          "containerPort": 8083
+        }
+      ]
+    },
+   {
+      "name": "movieinfo",
+      "image": "agilerules/movie-info-service:0.0.1-SNAPSHOT",
+     
+      "essential": true,
+      "memory": 256,
+      "portMappings": [
+        {
+          "hostPort": 8082,
+          "containerPort": 8082
+        }
+      ]
+    },
+    {
+      "name": "moviecatalog",
+      "image": "agilerules/movie-catalog-service:0.0.1-SNAPSHOT",
+      "essential": true,
+      "memory": 256,
+      "portMappings": [
+        {
+          "hostPort": 8081,
+          "containerPort": 8081
+        }
+      ],
+      "links": [
+        "ratingsdata","movieinfo"
+      ],
+       "environment" : [
+          { "name" : "RATING_URI", "valueFrom" : "arn:aws:ssm:us-east-1:405258943815:parameter/dev/movie-catalog-service/RATING_URI" },
+          { "name" : "MOVIES_URI", "valueFrom" : "arn:aws:ssm:us-east-1:405258943815:parameter/dev/movie-catalog-service/MOVIES_URI" }        
+      ]
+    }
+  ]
+}
